@@ -18,4 +18,9 @@ public class MainMenu extends AppCompatActivity {
         Intent int_profile=new Intent(this, Profile.class);
         startActivity(int_profile);
     }
+
+    public void open_wt_tracker(View view) {
+        Intent int_profile=new Intent(this, weight_tracker.class);
+        startActivity(int_profile);
+    }
 }
