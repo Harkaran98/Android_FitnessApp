@@ -66,7 +66,7 @@ public class weight_tracker extends AppCompatActivity {
                         String email = user.getEmail();
                         FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(email.replace(".","_")).setValue(arrayList);
 
-                       // Toast.makeText(weight_tracker.this, name+" "+email, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(weight_tracker.this, name+" "+email, Toast.LENGTH_SHORT).show();
                     }else {
 
                         Toast.makeText(weight_tracker.this, "error!!!", Toast.LENGTH_SHORT).show();
