@@ -61,12 +61,11 @@ public class weight_tracker extends AppCompatActivity {
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
-                        // Name, email address, and profile photo Url
-                        String name = user.getDisplayName();
-                        String email = user.getEmail();
-                        FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(email.replace(".","_")).setValue(arrayList);
 
-                        Toast.makeText(weight_tracker.this, name+" "+email, Toast.LENGTH_SHORT).show();
+                        String email = user.getEmail();
+                        FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(user.getUid()).setValue(arrayList); //not so secure using uid but for purpose of this project okay
+
+                    // Toast.makeText(weight_tracker.this, user.getUid(), Toast.LENGTH_SHORT).show();
                     }else {
 
                         Toast.makeText(weight_tracker.this, "error!!!", Toast.LENGTH_SHORT).show();
