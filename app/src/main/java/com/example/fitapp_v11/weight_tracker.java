@@ -12,6 +12,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,12 +52,28 @@ public class weight_tracker extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                // this line adds the data of your EditText and puts in your array
                 if (editText.getText().toString().equals("") || editTxt.getText().toString().equals(""))
                     Toast.makeText(weight_tracker.this, "Fill in both Weight and Date to add!", Toast.LENGTH_SHORT).show();
                 else {
+
                     arrayList.add("Weight: " + editTxt.getText().toString() + " lbs      Date: " + editText.getText().toString());
-                    // next thing you have to do is check if your adapter has changed
+
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        // Name, email address, and profile photo Url
+                        String name = user.getDisplayName();
+                        String email = user.getEmail();
+                        FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(email.replace(".","_")).setValue(arrayList);
+
+                       // Toast.makeText(weight_tracker.this, name+" "+email, Toast.LENGTH_SHORT).show();
+                    }else {
+
+                        Toast.makeText(weight_tracker.this, "error!!!", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
                     adapter.notifyDataSetChanged();
 
                 }
@@ -76,6 +96,8 @@ public class weight_tracker extends AppCompatActivity {
                 new DatePickerDialog(weight_tracker.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+
+
 
     }
     private void updateLabel(){
