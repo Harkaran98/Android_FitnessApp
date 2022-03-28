@@ -1,5 +1,6 @@
 package com.example.fitapp_v11;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
@@ -14,12 +15,17 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 public class weight_tracker extends AppCompatActivity {
 
@@ -61,24 +67,43 @@ public class weight_tracker extends AppCompatActivity {
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
+                        FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(user.getUid()).setValue(arrayList);
+                        //FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(user.getUid()).setValue("Weight: " + editTxt.getText().toString() + " lbs      Date: " + editText.getText().toString());
 
-                        String email = user.getEmail();
-                        FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(user.getUid()).setValue(arrayList); //not so secure using uid but for purpose of this project okay
-
-                    // Toast.makeText(weight_tracker.this, user.getUid(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(weight_tracker.this, user.getUid(), Toast.LENGTH_SHORT).show();
                     }else {
 
                         Toast.makeText(weight_tracker.this, "error!!!", Toast.LENGTH_SHORT).show();
                     }
-
-
-
                     adapter.notifyDataSetChanged();
-
                 }
             }
         });
 
+
+        DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                arrayList.clear();
+                //Toast.makeText(weight_tracker.this, "Data Ret!!!", Toast.LENGTH_SHORT).show();
+                for(DataSnapshot snap : snapshot.getChildren()){
+
+                    arrayList.add(snap.getValue().toString());
+                }
+//                arrayList.add("just added");
+//                arrayList.add("again!!!");
+//                Toast.makeText(weight_tracker.this,arrayList.get(0)+" values" , Toast.LENGTH_SHORT).show();
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(weight_tracker.this, "error!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         DatePickerDialog.OnDateSetListener date =new DatePickerDialog.OnDateSetListener() {
             @Override
