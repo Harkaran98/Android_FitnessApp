@@ -49,7 +49,7 @@ public class weight_tracker extends AppCompatActivity {
 
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
         // and the array that contains the data
-        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
+        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_expandable_list_item_1, arrayList);
 
         // Here, you set the data in your ListView
         list.setAdapter(adapter);
@@ -117,7 +117,10 @@ public class weight_tracker extends AppCompatActivity {
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(weight_tracker.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                DatePickerDialog dp=new DatePickerDialog(weight_tracker.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH));
+                dp.getDatePicker().setMaxDate(Calendar.getInstance().getTimeInMillis());
+                dp.show();
+
             }
         });
 

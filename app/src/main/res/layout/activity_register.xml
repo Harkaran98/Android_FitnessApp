@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_color"
     tools:context=".Register">
 
     <TextView
@@ -53,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ems="15"
+            android:background="@color/app_color"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,6 +76,7 @@
             android:id="@+id/reg_pass2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/app_color"
             android:ems="15"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -98,6 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="160dp"
+        android:textColor="@color/white"
         android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
