@@ -10,15 +10,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitApp_v11">
         <activity
+            android:name=".exercise_tracker"
+            android:exported="false" />
+        <activity
             android:name=".weight_tracker"
             android:exported="false"
-            android:windowSoftInputMode="adjustNothing"
-            >
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            android:windowSoftInputMode="adjustNothing">
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".Forgot_password"

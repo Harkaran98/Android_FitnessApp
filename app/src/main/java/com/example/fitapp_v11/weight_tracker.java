@@ -49,7 +49,7 @@ public class weight_tracker extends AppCompatActivity {
 
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
         // and the array that contains the data
-        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_expandable_list_item_1, arrayList);
+        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
 
         // Here, you set the data in your ListView
         list.setAdapter(adapter);
