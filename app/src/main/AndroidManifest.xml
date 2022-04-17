@@ -11,7 +11,8 @@
         android:theme="@style/Theme.FitApp_v11">
         <activity
             android:name=".exercise_tracker"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".weight_tracker"
             android:exported="false"

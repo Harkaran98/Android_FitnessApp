@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Objects;
 
 public class weight_tracker extends AppCompatActivity {
 
@@ -43,7 +42,7 @@ public class weight_tracker extends AppCompatActivity {
 
         editTxt = (EditText) findViewById(R.id.wt_entry);
         btn = (Button) findViewById(R.id.button);
-        list = (ListView) findViewById(R.id.list_id);
+        list = (ListView) findViewById(R.id.list_wt);
         editText=(EditText) findViewById(R.id.date_txt);
         arrayList = new ArrayList<String>();
 

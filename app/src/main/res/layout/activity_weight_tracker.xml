@@ -79,7 +79,7 @@
         app:layout_constraintVertical_bias="0.424" />
 
     <ListView
-        android:id="@+id/list_id"
+        android:id="@+id/list_wt"
         android:layout_width="359dp"
         android:layout_height="357dp"
         app:layout_constraintBottom_toBottomOf="parent"
