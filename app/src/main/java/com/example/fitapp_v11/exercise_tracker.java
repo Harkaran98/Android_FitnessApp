@@ -1,5 +1,6 @@
 package com.example.fitapp_v11;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
@@ -15,7 +16,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,12 +30,13 @@ import java.util.Locale;
 public class exercise_tracker extends AppCompatActivity {
 
     final Calendar myCalendar= Calendar.getInstance();
-    private EditText reps, sets, date_txt, ex_name;
-    private Button btn;
+    private EditText reps, sets, date_txt, ex_name, other, del_idx;
+    private Button btn, delete;
     private ListView list;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> arrayList;
     private Spinner ex_type;
+    String body_part="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,9 @@ public class exercise_tracker extends AppCompatActivity {
         arrayList = new ArrayList<String>();
         ex_name= (EditText) findViewById(R.id.name_ex);
         ex_type= (Spinner) findViewById(R.id.type_ex);
+        other = (EditText) findViewById(R.id.other_id);
+        delete= (Button) findViewById(R.id.del);
+        del_idx = (EditText) findViewById(R.id.delete_idx);
 
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
         // and the array that contains the data
@@ -57,7 +66,7 @@ public class exercise_tracker extends AppCompatActivity {
 
 
 
-
+        //add
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,13 +75,22 @@ public class exercise_tracker extends AppCompatActivity {
                     Toast.makeText(exercise_tracker.this, "Fill in all the information to enter!", Toast.LENGTH_SHORT).show();
                 else {
 
-                    arrayList.add(ex_type.getSelectedItem().toString() + "   "+ ex_name.getText().toString()+"  Reps: " + reps.getText().toString() + "  Sets: " + sets.getText().toString()
-                            +"   " + date_txt.getText().toString());
+                    if(ex_type.getSelectedItem().toString().equals("Other"))
+                        body_part= other.getText().toString();
+                    else
+                        body_part= ex_type.getSelectedItem().toString();
+
+                    arrayList.add(body_part + "|"+ ex_name.getText().toString()+"|Reps:" + reps.getText().toString() + "|Sets:" + sets.getText().toString()
+                            +"|" + date_txt.getText().toString());
 
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
-                        FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(user.getUid()).setValue(arrayList);
+
+                        FirebaseDatabase.getInstance().getReference().child("exercise_tracker").child(user.getUid()).setValue(arrayList);
+
+//                        FirebaseDatabase.getInstance().getReference().child("exercise_tracker").child(user.getUid()).child(date_txt.getText().toString().replace('/','-'))
+//                                .child(body_part).child(ex_name.getText().toString()).setValue(arrayList);
                         //FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(user.getUid()).setValue("Weight: " + editTxt.getText().toString() + " lbs      Date: " + editText.getText().toString());
 
                         // Toast.makeText(weight_tracker.this, user.getUid(), Toast.LENGTH_SHORT).show();
@@ -85,6 +103,70 @@ public class exercise_tracker extends AppCompatActivity {
             }
         });
 
+
+
+        //delete
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+
+                    if(Integer.parseInt(del_idx.getText().toString())-1 >= arrayList.size() || Integer.parseInt(del_idx.getText().toString())-1 < 0) {
+                        Toast.makeText(exercise_tracker.this, "Invalid Item Number! Try again", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        //deletes full
+                        FirebaseDatabase.getInstance().getReference().child("exercise_tracker").child(user.getUid()).removeValue();
+                        //now modify arraylist to remove particular data item and add the arraylist to firebase back again
+                        arrayList.remove(Integer.parseInt(del_idx.getText().toString()) - 1);
+                        FirebaseDatabase.getInstance().getReference().child("exercise_tracker").child(user.getUid()).setValue(arrayList);
+                    }
+
+
+                    //FirebaseDatabase.getInstance().getReference().child("weight_tracker").child(user.getUid()).setValue("Weight: " + editTxt.getText().toString() + " lbs      Date: " + editText.getText().toString());
+
+                    // Toast.makeText(weight_tracker.this, user.getUid(), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Toast.makeText(exercise_tracker.this, "Data doesn't exist!!", Toast.LENGTH_SHORT).show();
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+
+        //retrieve
+        DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("exercise_tracker").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                arrayList.clear();
+                //Toast.makeText(weight_tracker.this, "Data Ret!!!", Toast.LENGTH_SHORT).show();
+                int count=0;
+                int deletion_item=1;
+                for(DataSnapshot snap : snapshot.getChildren()){
+
+//                    Toast.makeText(exercise_tracker.this, snap.getValue().toString().
+//                            substring(snap.getValue().toString().indexOf('[')+1,snap.getValue().toString().lastIndexOf(']')), Toast.LENGTH_SHORT).show();
+
+                    arrayList.add(snap.getValue().toString());
+                    count++;
+                }
+//                arrayList.add("just added");
+//                arrayList.add("again!!!");
+//                Toast.makeText(weight_tracker.this,arrayList.get(0)+" values" , Toast.LENGTH_SHORT).show();
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(exercise_tracker.this, "error!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         DatePickerDialog.OnDateSetListener date =new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -117,11 +199,6 @@ public class exercise_tracker extends AppCompatActivity {
         date_txt.setText(dateFormat.format(myCalendar.getTime()));
     }
 
-    public void add_exercise(View view) {
 
 
-
-
-
-    }
 }

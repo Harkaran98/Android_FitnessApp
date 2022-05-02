@@ -8,5 +8,6 @@
         <item>Legs</item>
         <item>Shoulders</item>
         <item>Cardio</item>
+        <item>Other</item>
     </string-array>
 </resources>
