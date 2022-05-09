@@ -10,9 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitApp_v11">
         <activity
+            android:name=".nutrition_tracker"
+            android:exported="false" />
+        <activity
             android:name=".exercise_tracker"
             android:exported="false"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".weight_tracker"
             android:exported="false"
