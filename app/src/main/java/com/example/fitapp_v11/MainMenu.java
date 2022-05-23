@@ -33,4 +33,9 @@ public class MainMenu extends AppCompatActivity {
         Intent int_profile=new Intent(this, nutrition_tracker.class);
         startActivity(int_profile);
     }
+
+    public void open_mentalWellness(View view) {
+        Intent int_profile=new Intent(this, mental_health_tracker.class);
+        startActivity(int_profile);
+    }
 }

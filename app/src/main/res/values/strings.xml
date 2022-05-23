@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Overall Fit</string>
     <string-array name="ex_type">
+        <item></item>
         <item>Chest</item>
         <item>Back</item>
         <item>Arms</item>
@@ -10,4 +11,24 @@
         <item>Cardio</item>
         <item>Other</item>
     </string-array>
+    <string-array name="gender">
+        <item></item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="activity_lvl">
+        <item></item>
+        <item>Sedentary</item>
+        <item>Lightly Active</item>
+        <item>Moderately Active</item>
+        <item>Very Active</item>
+        <item>Extra Active</item>
+    </string-array>
+    <string-array name="Goal">
+        <item></item>
+        <item>Weight Gain</item>
+        <item>Weight Loss</item>
+        <item>Maintain Weight</item>
+    </string-array>
+
 </resources>

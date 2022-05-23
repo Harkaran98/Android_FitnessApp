@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -37,6 +38,7 @@ public class exercise_tracker extends AppCompatActivity {
     private ArrayList<String> arrayList;
     private Spinner ex_type;
     String body_part="";
+    int delete_idx=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,9 @@ public class exercise_tracker extends AppCompatActivity {
         ex_type= (Spinner) findViewById(R.id.type_ex);
         other = (EditText) findViewById(R.id.other_id);
         delete= (Button) findViewById(R.id.del);
-        del_idx = (EditText) findViewById(R.id.delete_idx);
+
+
+//        del_idx = (EditText) findViewById(R.id.delete_idx);
 
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
         // and the array that contains the data
@@ -61,8 +65,14 @@ public class exercise_tracker extends AppCompatActivity {
 
         // Here, you set the data in your ListView
         list.setAdapter(adapter);
-
-
+        //gets items num (i+1) (1-indexed)
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(exercise_tracker.this, "Selected "+String.valueOf(i+1)+" Item", Toast.LENGTH_SHORT).show();
+                delete_idx=i;
+            }
+        });
 
 
 
@@ -79,9 +89,16 @@ public class exercise_tracker extends AppCompatActivity {
                         body_part= other.getText().toString();
                     else
                         body_part= ex_type.getSelectedItem().toString();
-
+                    if(delete_idx==-1){
                     arrayList.add(body_part + "|"+ ex_name.getText().toString()+"|Reps:" + reps.getText().toString() + "|Sets:" + sets.getText().toString()
-                            +"|" + date_txt.getText().toString());
+                            +"|" + date_txt.getText().toString());}
+                    else{
+                        arrayList.add(delete_idx,body_part + "|"+ ex_name.getText().toString()+"|Reps:" + reps.getText().toString() + "|Sets:" + sets.getText().toString()
+                                +"|" + date_txt.getText().toString());
+                        arrayList.remove(delete_idx+1);
+                        delete_idx=-1;
+
+                    }
 
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -112,15 +129,20 @@ public class exercise_tracker extends AppCompatActivity {
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-
-                    if(Integer.parseInt(del_idx.getText().toString())-1 >= arrayList.size() || Integer.parseInt(del_idx.getText().toString())-1 < 0) {
-                        Toast.makeText(exercise_tracker.this, "Invalid Item Number! Try again", Toast.LENGTH_SHORT).show();
+                    if(arrayList.size()==0){
+                        Toast.makeText(exercise_tracker.this, "Nothing to delete!", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(delete_idx==-1) {
+                        Toast.makeText(exercise_tracker.this, "Select the item and try again", Toast.LENGTH_SHORT).show();
                     }
                     else {
                         //deletes full
                         FirebaseDatabase.getInstance().getReference().child("exercise_tracker").child(user.getUid()).removeValue();
                         //now modify arraylist to remove particular data item and add the arraylist to firebase back again
-                        arrayList.remove(Integer.parseInt(del_idx.getText().toString()) - 1);
+                        arrayList.remove(delete_idx);
+                        //reset
+                        delete_idx=-1;
+                        //arrayList.remove(Integer.parseInt(del_idx.getText().toString()) - 1);
                         FirebaseDatabase.getInstance().getReference().child("exercise_tracker").child(user.getUid()).setValue(arrayList);
                     }
 
@@ -135,6 +157,7 @@ public class exercise_tracker extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         });
+
 
 
         //retrieve
@@ -201,4 +224,12 @@ public class exercise_tracker extends AppCompatActivity {
 
 
 
+
+
+    public void update_entry(View view) {
+
+
+
+
+    }
 }

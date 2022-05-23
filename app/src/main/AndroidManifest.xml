@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitApp_v11">
         <activity
+            android:name=".mental_health_tracker"
+            android:exported="false" />
+        <activity
             android:name=".nutrition_tracker"
             android:exported="false" />
         <activity
